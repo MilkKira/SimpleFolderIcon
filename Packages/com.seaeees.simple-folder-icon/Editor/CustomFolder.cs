@@ -5,14 +5,27 @@ using UnityEngine;
 namespace SimpleFolderIcon.Editor
 {
     [InitializeOnLoad]
-    public class CustomFolder
+    public class CustomFolderLoader
     {
-        static CustomFolder()
-        {
-            IconDictionaryCreator.BuildDictionary();
-            EditorApplication.projectWindowItemOnGUI += DrawFolderIcon;
+        //static CustomFolder()
+        //{
+        //    IconDictionaryCreator.BuildDictionary();
+        //    EditorApplication.projectWindowItemOnGUI += DrawFolderIcon;
+        //}
+		static CustomFolderLoader()
+        {	
+			//Debug.Log("注册初始化事件");
+            EditorApplication.delayCall += Initialize;
+            
         }
-
+        static void Initialize()
+        {
+			//Debug.Log("取消初始化事件并执行图标加载");
+			Debug.Log("Loading Icons");
+            EditorApplication.delayCall -= Initialize;
+            IconDictionaryCreator.BuildDictionary();
+            EditorApplication.projectWindowItemOnGUI += CustomFolderLoader.DrawFolderIcon;
+        }
         static void DrawFolderIcon(string guid, Rect rect)
         {
             var path = AssetDatabase.GUIDToAssetPath(guid);
